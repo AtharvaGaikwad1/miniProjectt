@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using System.Data.SqlClient;
-using Microsoft.Win32;
-
+using System.Net.NetworkInformation;
 
 namespace LoadingScreen
 {
     public partial class LoginScreen : Form
     {
 
+        public int id { get; set; }
         
         public LoginScreen()
         {
@@ -25,8 +17,6 @@ namespace LoadingScreen
         
         SqlConnection conn = new SqlConnection(@"Data Source=den1.mssql7.gear.host;Initial Catalog=manavpandey157;User ID=manavpandey157;Password=Ko2bC40Ov_0-");
 
-       
-       
         private void button1_Click_1(object sender, EventArgs e)
         {
 
@@ -70,17 +60,47 @@ namespace LoadingScreen
                     username = usertxt.Text;
                     user_passowrd = passtxt.Text;
 
+                    //insert information into database
+                    SqlConnection con = new SqlConnection(@"Data Source=den1.mssql7.gear.host;Initial Catalog=manavpandey157;User ID=manavpandey157;Password=Ko2bC40Ov_0-");
+                    SqlCommand cmd = new SqlCommand("INSERT INTO EntryLog(Name,PC_Name,EntryTime,MAC_Address) values (@Name,@PC_Name,@EntryTime,@MAC_Address)", con);
+                    SqlCommand cmd1 = new SqlCommand("select id from EntryLog where Name=@name AND PC_Name=@pcname AND EntryTime=@entrytime", con);
+
+                    String entryTime = DateTime.Now.ToLongTimeString();
+                    String PC_Name = System.Environment.MachineName;
+                    var macAddr =
+                            (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                            where nic.OperationalStatus == OperationalStatus.Up
+                            select nic.GetPhysicalAddress().ToString()
+                            ).FirstOrDefault();
+
+                    cmd1.CommandType = CommandType.Text;
+                    cmd1.Parameters.AddWithValue("@name", username);
+                    cmd1.Parameters.AddWithValue("@pcname", PC_Name);
+                    cmd1.Parameters.AddWithValue("@entrytime", entryTime);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Name", username);
+                    cmd.Parameters.AddWithValue("@PC_Name", PC_Name);
+                    cmd.Parameters.AddWithValue("@EntryTime", entryTime);
+                    cmd.Parameters.AddWithValue("@MAC_Address", macAddr);
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    SqlDataReader sqlDataReader = cmd1.ExecuteReader();
+                    sqlDataReader.Read();
+                    id = (int)sqlDataReader["Id"];
+                    con.Close();
+
 
                     //next screen
 
-                    Entry formn = new Entry();
+                    Entry formn = new Entry(id);
                     formn.Show();
                     this.Hide();
                     button2.Hide();
                 }
                 else
                 {
-                    MessageBox.Show("Invalid details", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Invalid Credentials", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     passtxt.Clear();
                     usertxt.Clear();
                 }
@@ -88,22 +108,12 @@ namespace LoadingScreen
             }
             catch
             {
-                MessageBox.Show("error");
+                MessageBox.Show("Error");
             }
             finally
             {
                 conn.Close();
             }
-            SqlConnection con = new SqlConnection(@"Data Source=den1.mssql7.gear.host;Initial Catalog=manavpandey157;User ID=manavpandey157;Password=Ko2bC40Ov_0-");
-            SqlCommand cmd = new SqlCommand("INSERT INTO EntryLog(EntryTime,Name) values (@EntryTime,@Name)", con);
-
-            cmd.CommandType = CommandType.Text;
-            String entryTime = DateTime.Now.ToLongTimeString();
-            cmd.Parameters.AddWithValue("@EntryTime", entryTime);
-            cmd.Parameters.AddWithValue("@Name", username);
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
 
 
         }
@@ -121,6 +131,11 @@ namespace LoadingScreen
             AdminLogin fr5 = new AdminLogin();
             fr5.Show();
             this.Hide();
+        }
+
+        private void LoginScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0");
         }
     }
 }

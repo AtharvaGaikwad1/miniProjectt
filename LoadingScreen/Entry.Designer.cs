@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Entry));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -79,22 +81,37 @@
             this.label1.Size = new System.Drawing.Size(0, 22);
             this.label1.TabIndex = 3;
             // 
-            // Form3
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.ForeColor = System.Drawing.Color.LimeGreen;
+            this.label2.Location = new System.Drawing.Point(35, 211);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(489, 15);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Note : After closing this window, the System will Shutdown and Sesssion will be r" +
+    "ecorded.";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // Entry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(572, 300);
+            this.ClientSize = new System.Drawing.Size(554, 300);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "Form3";
+            this.Name = "Entry";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form3";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form3_FormClosing);
-            this.Load += new System.EventHandler(this.Form3_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Entry_FormClosing);
+            this.Load += new System.EventHandler(this.Entry_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -106,5 +123,6 @@
         private System.Windows.Forms.Timer timer1;
         private Button button1;
         private Label label1;
+        private Label label2;
     }
 }

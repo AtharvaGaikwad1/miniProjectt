@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace LoadingScreen
@@ -54,7 +46,7 @@ namespace LoadingScreen
                 }
                 else
                 {
-                    MessageBox.Show("Invalid details", "error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Invalid Credentials", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     passtxt.Clear();
                     usertxt.Clear();
                 }
@@ -62,7 +54,7 @@ namespace LoadingScreen
             }
             catch
             {
-                MessageBox.Show("error");
+                MessageBox.Show("Error");
             }
             finally
             {
@@ -80,6 +72,11 @@ namespace LoadingScreen
         private void label4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void AdminLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0");
         }
     }
 }

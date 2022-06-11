@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using System.Data.SqlClient;
 using System.Timers;
-using System.Runtime.InteropServices;
+
 namespace LoadingScreen
 
 {
     public partial class Entry : Form
     {
 
+        public int id { get; set; }
         System.Timers.Timer timer;
 
         int hour, minute, second;
         int count = 0;
-        public Entry()
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public Entry(int id)
         {
             InitializeComponent();
+            this.id = id;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -30,26 +25,8 @@ namespace LoadingScreen
 
         }
 
-        private void Form3_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            timer.Stop();
-            Application.DoEvents();
 
-            SqlConnection con = new SqlConnection(@"Data Source=den1.mssql7.gear.host;Initial Catalog=manavpandey157;User ID=manavpandey157;Password=Ko2bC40Ov_0-");
-            SqlCommand cmd = new SqlCommand("INSERT INTO EntryLog(ExitTime) values (@ExitTime)", con);
-
-            cmd.CommandType = CommandType.Text;
-            String exitTime = DateTime.Now.ToLongTimeString();
-            cmd.Parameters.AddWithValue("@ExitTime", exitTime);
-
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
-
-            System.Diagnostics.Process.Start("shutdown","/s /t 0");
-
-        }
-
+        /*  */
         private void button1_Click(object sender, EventArgs e)
         {
             
@@ -68,17 +45,32 @@ namespace LoadingScreen
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        private void label2_Click(object sender, EventArgs e)
         {
-            
+
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void Entry_FormClosing(object sender, FormClosingEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/visualstudio/ide/how-to-configure-projects-to-target-platforms?view=vs-2022");
+            timer.Stop();
+            Application.DoEvents();
+           
+            SqlConnection con = new SqlConnection(@"Data Source=den1.mssql7.gear.host;Initial Catalog=manavpandey157;User ID=manavpandey157;Password=Ko2bC40Ov_0-");
+            SqlCommand cmd = new SqlCommand("UPDATE EntryLog SET ExitTime=@ExitTime where id = @id", con);
+            cmd.CommandType = CommandType.Text;
+            String exitTime = DateTime.Now.ToLongTimeString();
+            cmd.Parameters.AddWithValue("@ExitTime", exitTime);
+            cmd.Parameters.AddWithValue("@id",id);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0");
+
         }
 
-        private void Form3_Load(object sender, EventArgs e)
+        private void Entry_Load(object sender, EventArgs e)
         {
             this.Text = "Mark your Attendance";
             timer = new System.Timers.Timer();
@@ -91,8 +83,8 @@ namespace LoadingScreen
             {
                 button1.Hide();
             }
-          
         }
+
 
         private void onTimeEvent(object? sender, ElapsedEventArgs e)
         {

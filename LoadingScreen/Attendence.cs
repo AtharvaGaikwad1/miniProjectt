@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace LoadingScreen
@@ -56,7 +48,7 @@ namespace LoadingScreen
             cmd.ExecuteNonQuery();
             con.Close();
 
-            MessageBox.Show("New Data is registerred ");
+            MessageBox.Show("Your Attendance has been Successfully Marked!");
             getAttendanceData();
             button1.Hide();
         }
